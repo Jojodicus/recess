@@ -1,14 +1,23 @@
-# crude makefile for initial testing
+CC = gcc
+SRC = recess
+RM = rm
+INSTALL_PATH = $(HOME)/.local/bin
 
-all:
-	gcc -shared -fPIC recess.c -o recess.so -ldl
-	gcc test.c -o test
+all: lib$(SRC).so
 
 clean:
-	rm -f recess.so
-	rm -f test
+	$(RM) -f *.so
 
-run: all
-	LD_PRELOAD=./recess.so ./test
+install: all
+	mkdir -p $(INSTALL_PATH)
+	cp $(SRC) $(INSTALL_PATH)/$(SRC)
+	cp lib$(SRC).so $(INSTALL_PATH)/lib$(SRC).so
+	chmod +x $(INSTALL_PATH)/$(SRC)
 
-.PHONY: all clean run
+uninstall:
+	rm -rf $(INSTALL_PATH)/$(SRC) $(INSTALL_PATH)/lib$(SRC).so
+
+lib%.so: %.c
+	$(CC) -shared -fPIC -ldl $< -o $@
+
+.PHONY: all clean install uninstall

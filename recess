@@ -1,0 +1,11 @@
+#!/bin/sh
+
+RECESS_PATH="./librecess.so"
+
+if test -f "$RECESS_PATH"; then
+    # execute
+    LD_PRELOAD=$RECESS_PATH $@
+else
+    echo "$RECESS_PATH not found"
+    exit 1
+fi
