@@ -13,6 +13,7 @@ This tool was designed for the C exercises in *Systemprogrammierung* (SP) at the
     $ git clone https://github.com/Jojodicus/recess
     $ cd recess
     $ make install
+a relog may be required to make the tool available in your path
 
 ## Usage
 <!-- TODO -->
