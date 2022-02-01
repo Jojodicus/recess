@@ -1,26 +1,10 @@
 #!/bin/sh
 
-# TODO: make this sync with Makefile and recess.c
+# TODO: make this sync with Makefile
 SRC="recess"
 LIB="lib$SRC.so"
 INSTALL_PATH="$HOME/.local/bin"
-CFG_PATH="$HOME/.config"
-
 RECESS_FILE="$INSTALL_PATH/$LIB"
-CONFIG_FILE="$CFG_PATH/$SRC.cfg"
-
-config() {
-    # fancy message
-    echo "╔═            Configuring recess...           ═╗"
-    echo "║ type in the chance you want syscalls to fail ║"
-    echo "╚═      0: no failures, 100: always fail      ═╝"
-
-    # read input
-    read -p "-> " chance
-
-    # write config
-    echo "chance=$chance" > $CONFIG_FILE
-}
 
 shim() {
     if test -f "$RECESS_FILE"; then
@@ -34,10 +18,8 @@ shim() {
 
 # main
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 [config | <cmd>]"
+    echo "Usage: $0 <cmd>"
     exit 1
-elif [ $1 = "config" ]; then
-    config
 else
     shim $@
 fi
