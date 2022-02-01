@@ -3,32 +3,46 @@
 // TODO: clean up includes
 #include <errno.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <dlfcn.h>
 
 #ifndef FAIL_CHANCE
-#define FAIL_CHANCE 100
+#define FAIL_CHANCE 0
 #endif
 
-static volatile bool lookup = false;
+static bool rand_init = false;
 
-// could be changed a macro
-static bool should_fail(void) {
-    if (lookup) {
-        return false;
+static bool should_fail(){
+    if (!rand_init){
+        srand(time(NULL));
+        rand_init = true;
     }
-    return (rand() % 100) < FAIL_CHANCE;
+
+    return rand() % 100 < FAIL_CHANCE;
 }
 
-void *malloc(size_t size) { // segfaults cuz dlsym uses our malloc ahhhhhh
+static void *(*real_malloc)(size_t) = NULL;
+
+static void malloc_init(void) {
+    real_malloc = dlsym(RTLD_NEXT, "malloc");
+    if (real_malloc == NULL) {
+        fprintf(stderr, "dlsym failed: %s\n", dlerror());
+    }
+}
+
+void *malloc(size_t size) { // still segfaults
+    if (real_malloc == NULL) {
+        malloc_init();
+    }
+
     if (should_fail()) {
         errno = ENOMEM;
         return NULL;
     }
 
-    void *(*orig_malloc)(size_t) = dlsym(RTLD_NEXT, "malloc");
-    return orig_malloc(size);
+    return real_malloc(size);
 }
 
 // TODO: add lots of other syscalls
