@@ -1,11 +1,43 @@
 #!/bin/sh
 
-RECESS_PATH="./librecess.so"
+# TODO: make this sync with Makefile and recess.c
+SRC="recess"
+LIB="lib$SRC.so"
+INSTALL_PATH="$HOME/.local/bin"
+CFG_PATH="$HOME/.config"
 
-if test -f "$RECESS_PATH"; then
-    # execute
-    LD_PRELOAD=$RECESS_PATH $@
-else
-    echo "$RECESS_PATH not found"
+RECESS_FILE="$INSTALL_PATH/$LIB"
+CONFIG_FILE="$CFG_PATH/$SRC.cfg"
+
+config() {
+    # fancy message
+    echo "╔═            Configuring recess...           ═╗"
+    echo "║ type in the chance you want syscalls to fail ║"
+    echo "╚═      0: no failures, 100: always fail      ═╝"
+
+    # read input
+    read -p "-> " chance
+
+    # write config
+    echo "chance=$chance" > $CONFIG_FILE
+}
+
+shim() {
+    if test -f "$RECESS_FILE"; then
+        # execute
+        LD_PRELOAD=$RECESS_FILE $@
+    else
+        echo "$RECESS_FILE not found"
+        exit 1
+    fi
+}
+
+# main
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 [config | <cmd>]"
     exit 1
+elif [ $1 = "config" ]; then
+    config
+else
+    shim $@
 fi
