@@ -1,6 +1,10 @@
 #define _GNU_SOURCE
 
-// TODO: clean up includes
+/*
+ * @TODO: documentation
+ */
+
+// @TODO: clean up includes
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,40 +13,39 @@
 #include <dlfcn.h>
 
 #ifndef FAIL_CHANCE
-#define FAIL_CHANCE 0
+#define FAIL_CHANCE 50
 #endif
 
-static bool rand_init = false;
+// flag if rng has been seeded so we don't seed it more than necessary
+static bool _g_rand_init = false;
+// flag if failures are currently suppressed, accessible from outside
+bool g_recess_suppressed = false;
 
-static bool should_fail(){
-    if (!rand_init){
-        srand(time(NULL));
-        rand_init = true;
+static bool _should_fail(){
+    // suppressed -> no failures
+    if (g_recess_suppressed) {
+        return false;
     }
 
+    // initialize rng if necessary
+    if (!_g_rand_init){
+        srand(time(NULL));
+        _g_rand_init = true;
+    }
+
+    // roll
     return rand() % 100 < FAIL_CHANCE;
 }
 
-static void *(*real_malloc)(size_t) = NULL;
 
-static void malloc_init(void) {
-    real_malloc = dlsym(RTLD_NEXT, "malloc");
-    if (real_malloc == NULL) {
-        fprintf(stderr, "dlsym failed: %s\n", dlerror());
-    }
-}
-
-void *malloc(size_t size) { // still segfaults
-    if (real_malloc == NULL) {
-        malloc_init();
-    }
-
-    if (should_fail()) {
+void *malloc(size_t size) {
+    if (_should_fail()) {
         errno = ENOMEM;
         return NULL;
     }
 
-    return real_malloc(size);
+    extern void *__libc_malloc(size_t);
+    return __libc_malloc(size);
 }
 
-// TODO: add lots of other syscalls
+// @TODO: add lots of other syscalls
