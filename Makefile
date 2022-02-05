@@ -12,7 +12,7 @@ INSTALL_PATH = $(HOME)/.local/bin
 all: $(LIB)
 
 clean:
-	$(RM) -f *.so
+	$(RM) -f *.so *.o
 
 install: all
 	mkdir -p $(INSTALL_PATH)
