@@ -48,4 +48,30 @@ void *malloc(size_t size) {
     return __libc_malloc(size);
 }
 
+void *calloc(size_t nmemb, size_t size) {
+    if (_should_fail()) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    extern void *__libc_calloc(size_t, size_t);
+    return __libc_calloc(nmemb, size);
+}
+
+void free(void *ptr) {
+    extern void __libc_free(void *);
+    __libc_free(ptr);
+}
+
+void *realloc(void *ptr, size_t size) {
+    if (_should_fail()) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    extern void *__libc_realloc(void *, size_t);
+    return __libc_realloc(ptr, size);
+}
+
+
 // @TODO: add lots of other syscalls
