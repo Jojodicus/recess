@@ -1,4 +1,4 @@
-FAIL_CHANCE = 10
+FAIL_CHANCE = 10 # @todo: make this an environment variable
 
 CC = gcc
 CFLAGS = -Wall -g -O2 -std=c11
@@ -16,13 +16,12 @@ clean:
 
 install: all
 	mkdir -p $(INSTALL_PATH)
-	mkdir -p $(CFG_PATH)
 	cp $(SRC) $(INSTALL_PATH)/$(SRC)
 	cp $(LIB) $(INSTALL_PATH)/$(LIB)
 	chmod +x $(INSTALL_PATH)/$(SRC)
 
 uninstall:
-	rm -rf $(INSTALL_PATH)/$(SRC) $(INSTALL_PATH)/$(LIB) $(CFG_PATH)/$(CFG)
+	rm -rf $(INSTALL_PATH)/$(SRC) $(INSTALL_PATH)/$(LIB)
 
 $(LIB): $(SRC).c
 	$(CC) -shared -fPIC -ldl -DFAIL_CHANCE=$(FAIL_CHANCE) $< -o $@
