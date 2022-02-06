@@ -1,4 +1,3 @@
 *.so
 *.o
-*.dSYM
 a.out
