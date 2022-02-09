@@ -13,9 +13,41 @@ This tool was designed for the C exercises in *Systemprogrammierung* (SP) at the
     $ git clone https://github.com/Jojodicus/recess
     $ cd recess
     $ make install
-a relog may be required to make the tool available in your path
+a relog may be required to make the tool available in your path (if that doesn't work, try [this](#help))
 
 ## Usage
-<!-- TODO -->
+To use the tool, simply run `recess`, followed by the name of the binary you want to test. For example:
+
+    $ recess ./my_binary
+
 ## Customization
-<!-- TODO -->
+The default fail chance for libcalls is 10%. You can change this by running
+
+    $ recess config [editor]
+
+where editor is the name of your favorite text editor (or leave blank to use one of the default editors).
+
+</p>
+
+By changing the fail chance, you can make the tool more or less likely to fail. The value should be between 0 and 100, otherwise the default value of 10 will still be used.
+
+</p>
+
+If you really want, you can also edit the config by hand, the path to the config file is `~/.recess/config`.
+
+---
+
+## Help
+
+### I can't run the tool, it says `command not found`
+Try logging out and in again. If that doesn't work, `~/.local/bin` may be missing in your `$PATH`. Try this:
+
+        $ export PATH=$PATH:$HOME/.local/bin
+
+If it stops working after a relog, add the line above to your `~/.bashrc` file.
+
+### `recess config` says `No editor found`
+The configurator checks for the editors neovim, vim and nano (in that order). If none of those is found it will terminate with an error. To fix this, install one of the three editors or run `recess config <editor>` to specify the editor manually.
+
+### `failed to find valid value for FAIL_CHANCE` but it's present in the config file
+Make sure you have no whitespaces or tabs in the definition. The format is `FAIL_CHANCE=<value>`.
