@@ -1,25 +1,38 @@
 #!/bin/sh
 
-# TODO: make this sync with Makefile
-SRC="recess"
-LIB="lib$SRC.so"
-INSTALL_PATH="$HOME/.local/bin"
-RECESS_FILE="$INSTALL_PATH/$LIB"
-
 shim() {
-    if test -f "$RECESS_FILE"; then
+    if test -f "./librecess.so"; then
         # execute
-        LD_PRELOAD=$RECESS_FILE $@
+        LD_PRELOAD=./librecess.so $@
     else
-        echo "$RECESS_FILE not found"
+        echo "librecess.so not found"
+        exit 1
+    fi
+}
+
+CFG_PATH="$HOME/.config/recess.cfg"
+config() {
+    # check if editor is specified
+    if test -n "$1"; then
+        $1 $CFG_PATH
+    elif command -v nvim >/dev/null 2>&1; then # neovim
+        nvim $CFG_PATH
+    elif command -v vim >/dev/null 2>&1; then # vim
+        vim $CFG_PATH
+    elif command -v nano >/dev/null 2>&1; then # nano
+        nano $CFG_PATH
+    else
+        echo "No editor found" # ???
         exit 1
     fi
 }
 
 # main
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <cmd>"
+    echo "Usage: recess <cmd> | config [editor]"
     exit 1
+elif [ $1 = "config" ]; then
+    config $2
 else
     shim $@
 fi
