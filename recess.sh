@@ -1,11 +1,12 @@
 #!/bin/sh
 
+LIB_PATH="$HOME/.local/bin/librecess.so"
 shim() {
-    if test -f "./librecess.so"; then
+    if test -f $LIB_PATH; then
         # execute
-        LD_PRELOAD=./librecess.so $@
+        LD_PRELOAD=$LIB_PATH $@
     else
-        echo "librecess.so not found"
+        echo "recess library not found"
         exit 1
     fi
 }
