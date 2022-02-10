@@ -25,6 +25,7 @@ static int _g_fail_chance = -1;
 // flag if failures are currently suppressed, accessible from outside
 bool g_recess_suppressed = false;
 
+// @TODO XDG compliant
 static int _get_config_path(char **path) {
     // get home directory
     char *home = getenv("HOME");
