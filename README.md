@@ -43,7 +43,7 @@ If you really want, you can also edit the config by hand, the path to the config
 <!-- @TODO give copy paste for dynamically loading .profile even if .bash_profile is present, also: give better quality help for applying changes -->
 Try logging out and in again. If that doesn't work, `~/.local/bin` may be missing in your `$PATH`. Try this:
 
-        $ export PATH=$PATH:$HOME/.local/bin
+    $ export PATH=$PATH:$HOME/.local/bin
 
 If it stops working after a relog, add the line above to your `~/.bash_profile` (or if that doesn't exist, the `~/.profile`). Then type `source .bash_profile` (or `source .profile`) for the changes to take effect.
 
