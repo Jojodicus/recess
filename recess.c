@@ -13,6 +13,7 @@
 #include <time.h>
 #include <dlfcn.h>
 
+// @TODO: see _get_config_path()
 // config will be in $HOME/.config/recess.cfg
 #define CONFIG_NAME "/.config/recess.cfg"
 
@@ -46,7 +47,7 @@ static int _get_config_path(char **path) {
     return 0;
 }
 
-// simple config parser
+// simple config parser @TODO: outsource to extra file
 static void _parse_fail_chance() {
     // suppress shims
     g_recess_suppressed = true;
@@ -81,7 +82,7 @@ static void _parse_fail_chance() {
             continue;
         }
 
-        // parse line
+        // parse line @TODO: accept "key = value" as well instead of only "key=value"
         char *key = strtok(line, "=");
         char *value = strtok(NULL, "=");
 
@@ -99,7 +100,7 @@ static void _parse_fail_chance() {
         // parse value
         fail_chance = strtol(value, NULL, 10);
 
-        // check for valid range
+        // check for valid range @TODO: maybe clamp instead of discrading
         if (fail_chance < 0 || fail_chance > 100) {
             fprintf(stderr, "recess - invalid value for FAIL_CHANCE at line %d, searching for valid value\n", line_num);
             continue;
