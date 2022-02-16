@@ -33,3 +33,4 @@ $(LIB): $(SRC).c
 	$(CC) -shared -fPIC -ldl -DDEFAULT_FAIL_CHANCE=$(DEFAULT_FAIL_CHANCE) $< -o $@
 
 .PHONY: all clean install uninstall
+
