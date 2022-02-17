@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# @TODO: XDG path
 LIB_PATH="$HOME/.local/bin/librecess.so"
 shim() {
     if test -f $LIB_PATH; then
@@ -11,6 +12,7 @@ shim() {
     fi
 }
 
+# @TODO: XDG path
 CFG_PATH="$HOME/.config/recess.cfg"
 config() {
     # check if editor is specified
