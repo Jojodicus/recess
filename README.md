@@ -45,7 +45,7 @@ Try logging out and in again. If that doesn't work, `~/.local/bin` may be missin
 
     $ export PATH=$PATH:$HOME/.local/bin
 
-If it stops working after a relog, add the line above to your `~/.bash_profile` (or if that doesn't exist, the `~/.profile`). Then type `source .bash_profile` (or `source .profile`) for the changes to take effect.
+If it stops working after a relog, add the line above to your `~/.bash_profile` (or if that doesn't exist, the `~/.profile`). Then relog for the changes to take effect.
 
 ### `recess config` says `No editor found`
 The configurator checks for the editors neovim, vim and nano (in that order). If none of those is found it will terminate with an error. To fix this, install one of the three editors or run `recess config <editor>` to specify the editor manually.
