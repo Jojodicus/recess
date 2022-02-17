@@ -39,7 +39,9 @@ install: librecess.so recess.sh recess.cfg
 	cp recess.cfg $(CFG_PATH)/recess.cfg
 
 uninstall:
-	rm -rf $(INSTALL_PATH)/recess $(INSTALL_PATH)/librecess.so $(CFG_PATH)/recess.cfg
+	rm -f $(INSTALL_PATH)/recess
+	rm -f $(INSTALL_PATH)/librecess.so
+	rm -f $(CFG_PATH)/recess.cfg
 
 
 .PHONY: all clean install uninstall
