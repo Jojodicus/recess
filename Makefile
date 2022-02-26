@@ -17,10 +17,11 @@ all: librecess.so
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
-OBJS = recess.o
+OBJS = recess.o config_utils.o
 
 # depenencies
-recess.o: src/recess.c src/recess.h
+recess.o: src/recess.c src/recess.h src/config_utils.h
+config_utils.o : src/config_utils.c src/recess.h src/config_utils.h
 
 librecess.so: $(OBJS)
 	$(CC) $(LDFLAGS) -DDEFAULT_FAIL_CHANCE=$(DEFAULT_FAIL_CHANCE) $^ -o $@
@@ -45,4 +46,3 @@ uninstall:
 
 
 .PHONY: all clean install uninstall
-
