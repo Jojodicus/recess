@@ -57,6 +57,7 @@ static void _parse_fail_chance() {
     if (_get_config_path(&path) != 0) {
         fprintf(stderr, "recess: failed to get config path\n");
         _g_fail_chance = DEFAULT_FAIL_CHANCE;
+        g_recess_suppressed = false;
         return;
     }
 
@@ -66,6 +67,7 @@ static void _parse_fail_chance() {
     if (config == NULL) {
         perror("recess - failed to open config file");
         _g_fail_chance = DEFAULT_FAIL_CHANCE;
+        g_recess_suppressed = false;
         return;
     }
 
@@ -115,6 +117,7 @@ static void _parse_fail_chance() {
     if (ferror(config)) {
         perror("recess - error while reading config file");
         _g_fail_chance = DEFAULT_FAIL_CHANCE;
+        g_recess_suppressed = false;
         return;
     }
 
