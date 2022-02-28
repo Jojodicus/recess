@@ -107,5 +107,6 @@ bool should_fail(const char *method){
     }
 
     // roll
+    // clamp not neccessary as formula works regardless
     return rand() % 100 < chance;
 }
