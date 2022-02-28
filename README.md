@@ -49,6 +49,3 @@ If it stops working after a relog, add the line above to your `~/.bash_profile` 
 
 ### `recess config` says `No editor found`
 The configurator checks for the editors neovim, vim and nano (in that order). If none of those is found it will terminate with an error. To fix this, install one of the three editors or run `recess config <editor>` to specify the editor manually.
-
-### `failed to find valid value for FAIL_CHANCE` but it's present in the config file
-Make sure you have no whitespaces or tabs in the definition. The format is `FAIL_CHANCE=<value>`.
