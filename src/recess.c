@@ -41,11 +41,6 @@ void *calloc(size_t nmemb, size_t size) {
     return __libc_calloc(nmemb, size);
 }
 
-void free(void *ptr) {
-    extern void __libc_free(void *);
-    __libc_free(ptr);
-}
-
 void *realloc(void *ptr, size_t size) {
     if (should_fail()) {
         errno = ENOMEM;
