@@ -11,10 +11,6 @@
 #define DEFAULT_FAIL_CHANCE 10
 #endif
 
-typedef struct {
-    int fail_chance;
-} config_t;
-
-bool should_fail();
+bool should_fail(const char *method);
 
 #endif // CONFIG_UTILS_H

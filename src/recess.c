@@ -22,7 +22,7 @@ bool g_recess_suppressed = false;
 
 
 void *malloc(size_t size) {
-    if (should_fail()) {
+    if (should_fail("malloc")) {
         errno = ENOMEM;
         return NULL;
     }
@@ -32,7 +32,7 @@ void *malloc(size_t size) {
 }
 
 void *calloc(size_t nmemb, size_t size) {
-    if (should_fail()) {
+    if (should_fail("calloc")) {
         errno = ENOMEM;
         return NULL;
     }
@@ -42,7 +42,7 @@ void *calloc(size_t nmemb, size_t size) {
 }
 
 void *realloc(void *ptr, size_t size) {
-    if (should_fail()) {
+    if (should_fail("realloc")) {
         errno = ENOMEM;
         return NULL;
     }

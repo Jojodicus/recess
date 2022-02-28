@@ -4,6 +4,7 @@
 
 // @TODO: clean up includes
 #include <errno.h>
+#include <libconfig.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,9 +14,20 @@
 
 #include "recess.h"
 
-static config_t CFG = {
-    .fail_chance = -1,
-};
+static config_t *_g_cfg = NULL;
+
+static void _make_default_config() {
+    config_clear(_g_cfg);
+    config_setting_t *root = config_root_setting(_g_cfg);
+    config_setting_add(root, "default", CONFIG_TYPE_INT);
+}
+
+static void _destroy_config() {
+    g_recess_suppressed = true;
+    config_destroy(_g_cfg);
+    free(_g_cfg);
+    g_recess_suppressed = false;
+}
 
 // @TODO XDG compliant
 static int _get_config_path(char **path) {
@@ -42,103 +54,58 @@ static void _parse_config() {
     // suppress shims
     g_recess_suppressed = true;
 
+    _g_cfg = malloc(sizeof(config_t));
+    config_init(_g_cfg);
+
     // get config path
     char *path;
     if (_get_config_path(&path) != 0) {
         fprintf(stderr, "recess: failed to get config path\n");
-        CFG.fail_chance = DEFAULT_FAIL_CHANCE;
+        _make_default_config();
         g_recess_suppressed = false;
         return;
     }
 
     // open config file
-    FILE *config = fopen(path, "r");
-    free(path); // don't need path anymore
-    if (config == NULL) {
-        perror("recess - failed to open config file");
-        CFG.fail_chance = DEFAULT_FAIL_CHANCE;
+    config_init(_g_cfg);
+    if (config_read_file(_g_cfg, path) == CONFIG_FALSE) {
+        fprintf(stderr, "%s:%d - %s\n", config_error_file(_g_cfg),
+            config_error_line(_g_cfg), config_error_text(_g_cfg));
+        _make_default_config();
+        config_destroy(_g_cfg);
+        free(path);
         g_recess_suppressed = false;
         return;
     }
+    free(path);
 
-    // read config file
-    char *line = NULL;
-    size_t len = 0;
-    unsigned int line_num = 0;
-    long fail_chance = -1;
-    while (getline(&line, &len, config) != -1) {
-        line_num++;
-
-        // skip comments
-        if (line[0] == '#') {
-            continue;
-        }
-
-        // parse line @TODO: accept "key = value" as well instead of only "key=value"
-        char *key = strtok(line, "=");
-        char *value = strtok(NULL, "=");
-
-        // check for valid key
-        if (strcmp(key, "FAIL_CHANCE") != 0) {
-            continue;
-        }
-
-        // check for valid value
-        if (value == NULL) {
-            fprintf(stderr, "recess - invalid value for FAIL_CHANCE at line %d, searching for valid value\n", line_num);
-            continue;
-        }
-
-        // parse value
-        fail_chance = strtol(value, NULL, 10);
-
-        // check for valid range @TODO: maybe clamp instead of discrading
-        if (fail_chance < 0 || fail_chance > 100) {
-            fprintf(stderr, "recess - invalid value for FAIL_CHANCE at line %d, searching for valid value\n", line_num);
-            continue;
-        }
-
-        // set fail chance
-        CFG.fail_chance = (int) fail_chance;
-        break;
-    }
-
-    // check for errors
-    if (ferror(config)) {
-        perror("recess - error while reading config file");
-        CFG.fail_chance = DEFAULT_FAIL_CHANCE;
-        g_recess_suppressed = false;
-        return;
-    }
-
-    // close config file
-    fclose(config);
-
-    // free line
-    free(line);
-
-    // check if we found a valid value
-    if (CFG.fail_chance == -1) {
-        fprintf(stderr, "recess - failed to find valid value for FAIL_CHANCE, using default value\n");
-        CFG.fail_chance = DEFAULT_FAIL_CHANCE;
-    }
+    // cleanup
+    atexit(&_destroy_config);
 
     // unsuppress failures
     g_recess_suppressed = false;
 }
 
-bool should_fail(){
+bool should_fail(const char *method){
     // suppressed -> no failures
     if (g_recess_suppressed) {
         return false;
     }
 
     // initialize rng if necessary
-    if (CFG.fail_chance == -1) {
+    if (_g_cfg == NULL) {
         srand(time(NULL));
         _parse_config();
     }
 
+    // lookup
+    int chance;
+    if (config_lookup_int(_g_cfg, method, &chance) == CONFIG_FALSE) {
+        if (config_lookup_int(_g_cfg, "default", &chance) == CONFIG_FALSE) {
+            chance = DEFAULT_FAIL_CHANCE;
+        }
+    }
+
     // roll
-    return rand() % 100 < CFG.fail_chance;
+    return rand() % 100 < chance;
 }

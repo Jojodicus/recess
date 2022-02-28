@@ -3,7 +3,7 @@ DEFAULT_FAIL_CHANCE = 10
 
 CC = gcc
 CFLAGS = -fPIC -Wall -g -O2 -std=c11
-LDFLAGS = -shared -ldl
+LDFLAGS = -shared -ldl -lconfig
 RM = rm
 
 # @TODO: XDG path
