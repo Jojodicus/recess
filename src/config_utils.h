@@ -5,7 +5,7 @@
 
 // @TODO: XDG compliant
 // config will be in $HOME/CONFIG_NAME
-#define CONFIG_NAME "/.config/recess.cfg"
+#define CONFIG_NAME ".config/recess.cfg"
 
 #ifndef DEFAULT_FAIL_CHANCE
 #define DEFAULT_FAIL_CHANCE 10

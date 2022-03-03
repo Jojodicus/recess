@@ -44,8 +44,7 @@ static int _get_config_path(char **path) {
     }
 
     // build path
-    strncpy(*path, home, strlen(home) + 1);
-    strncat(*path, CONFIG_NAME, strlen(CONFIG_NAME) + 1);
+    sprintf(*path, "%s/%s", home, CONFIG_NAME);
 
     return 0;
 }
