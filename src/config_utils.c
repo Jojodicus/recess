@@ -44,7 +44,9 @@ static int _get_config_path(char **path) {
     }
 
     // build path
-    sprintf(*path, "%s/%s", home, CONFIG_NAME);
+    if (sprintf(*path, "%s/%s", home, CONFIG_NAME) < 0) {
+        return -1;
+    }
 
     return 0;
 }
