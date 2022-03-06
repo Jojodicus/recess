@@ -81,7 +81,7 @@ static void _parse_config() {
     free(path);
 
     // cleanup
-    atexit(&_destroy_config);
+    atexit(_destroy_config);
 
     // unsuppress failures
     g_recess_suppressed = false;
