@@ -1,11 +1,7 @@
 # RECESS
 (**R**untime **E**rror **C**hecker for **E**xersises in **S**P using **S**hims)
 
-</p>
-
 Easily find unhandled errors in your code using shims, no recompiling needed!
-
-</p>
 
 This tool was designed for the C exercises in *Systemprogrammierung* (SP) at the *Friedrich-Alexander-University Erlangen*, although it can be used to test pretty much all compiled binaries. It works by intercepting certain system calls and sporadically making them return errors. If any part of the code does not handle these errors correctly, the program will behave unexpectedly or (in the worst case) crash.
 
@@ -27,11 +23,7 @@ The default fail chance for libcalls is 10%. You can change this by running
 
 where editor is the name of your favorite text editor (or leave blank to use one of the default editors).
 
-</p>
-
 By changing the fail chance, you can make the tool more or less likely to fail. The value should be between 0 and 100, otherwise the default value of 10 will still be used.
-
-</p>
 
 If you really want, you can also edit the config by hand, the path to the config file is `~/.recess/config`.
 
