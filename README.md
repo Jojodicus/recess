@@ -25,7 +25,7 @@ where editor is the name of your favorite text editor (or leave blank to use one
 
 By changing the fail chance, you can make the tool more or less likely to fail. The value should be between 0 and 100, otherwise the default value of 10 will still be used.
 
-If you really want, you can also edit the config by hand, the path to the config file is `~/.recess/config`.
+If you really want, you can also edit the config by hand, the path to the config file is `~/.config/recess.cfg`.
 
 ---
 
