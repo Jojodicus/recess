@@ -14,23 +14,23 @@
 
 #include "recess.h"
 
-static config_t *_g_cfg = NULL;
+static config_t *parsed_config = NULL;
 
-static void _make_default_config() {
-    config_clear(_g_cfg);
-    config_setting_t *root = config_root_setting(_g_cfg);
+static void make_default_config() {
+    config_clear(parsed_config);
+    config_setting_t *root = config_root_setting(parsed_config);
     config_setting_add(root, "default", CONFIG_TYPE_INT);
 }
 
-static void _destroy_config() {
+static void destroy_config() {
     g_recess_suppressed = true;
-    config_destroy(_g_cfg);
-    free(_g_cfg);
+    config_destroy(parsed_config);
+    free(parsed_config);
     g_recess_suppressed = false;
 }
 
 // @TODO XDG compliant
-static int _get_config_path(char **path) {
+static int get_config_path(char **path) {
     // get home directory
     char *home = getenv("HOME");
     if (home == NULL) {
@@ -51,29 +51,29 @@ static int _get_config_path(char **path) {
     return 0;
 }
 
-static void _parse_config() {
+static void parse_config() {
     // suppress shims
     g_recess_suppressed = true;
 
-    _g_cfg = malloc(sizeof(config_t));
-    config_init(_g_cfg);
+    parsed_config = malloc(sizeof(config_t));
+    config_init(parsed_config);
 
     // get config path
     char *path;
-    if (_get_config_path(&path) != 0) {
+    if (get_config_path(&path) != 0) {
         fprintf(stderr, "recess: failed to get config path\n");
-        _make_default_config();
+        make_default_config();
         g_recess_suppressed = false;
         return;
     }
 
     // open config file
-    config_init(_g_cfg);
-    if (config_read_file(_g_cfg, path) == CONFIG_FALSE) {
-        fprintf(stderr, "%s:%d - %s\n", config_error_file(_g_cfg),
-            config_error_line(_g_cfg), config_error_text(_g_cfg));
-        _make_default_config();
-        config_destroy(_g_cfg);
+    config_init(parsed_config);
+    if (config_read_file(parsed_config, path) == CONFIG_FALSE) {
+        fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
+            config_error_line(parsed_config), config_error_text(parsed_config));
+        make_default_config();
+        config_destroy(parsed_config);
         free(path);
         g_recess_suppressed = false;
         return;
@@ -81,7 +81,7 @@ static void _parse_config() {
     free(path);
 
     // cleanup
-    atexit(_destroy_config);
+    atexit(destroy_config);
 
     // unsuppress failures
     g_recess_suppressed = false;
@@ -94,15 +94,15 @@ bool should_fail(const char *method){
     }
 
     // initialize rng if necessary
-    if (_g_cfg == NULL) {
+    if (parsed_config == NULL) {
         srand(time(NULL));
-        _parse_config();
+        parse_config();
     }
 
     // lookup
     int chance;
-    if (config_lookup_int(_g_cfg, method, &chance) == CONFIG_FALSE) {
-        if (config_lookup_int(_g_cfg, "default", &chance) == CONFIG_FALSE) {
+    if (config_lookup_int(parsed_config, method, &chance) == CONFIG_FALSE) {
+        if (config_lookup_int(parsed_config, "default", &chance) == CONFIG_FALSE) {
             chance = DEFAULT_FAIL_CHANCE;
         }
     }
