@@ -18,6 +18,10 @@ config() {
     # check if editor is specified
     if test -n "$1"; then
         $1 $CFG_PATH
+    elif test -n "$EDITOR" then # $EDITOR
+        $EDITOR $CFG_PATH
+    elif test -n "$VISUAL" then # $VISUAL
+        $VISUAL $CFG_PATH
     elif command -v nvim >/dev/null 2>&1; then # neovim
         nvim $CFG_PATH
     elif command -v vim >/dev/null 2>&1; then # vim
