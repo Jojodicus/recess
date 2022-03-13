@@ -23,10 +23,10 @@ static void make_default_config() {
 }
 
 static void destroy_config() {
-    g_recess_suppressed = true;
+    recess_suppressed = true;
     config_destroy(parsed_config);
     free(parsed_config);
-    g_recess_suppressed = false;
+    recess_suppressed = false;
 }
 
 // @TODO XDG compliant
@@ -53,7 +53,7 @@ static int get_config_path(char **path) {
 
 static void parse_config() {
     // suppress shims
-    g_recess_suppressed = true;
+    recess_suppressed = true;
 
     parsed_config = malloc(sizeof(config_t));
     config_init(parsed_config);
@@ -63,7 +63,7 @@ static void parse_config() {
     if (get_config_path(&path) != 0) {
         fprintf(stderr, "recess: failed to get config path\n");
         make_default_config();
-        g_recess_suppressed = false;
+        recess_suppressed = false;
         return;
     }
 
@@ -75,7 +75,7 @@ static void parse_config() {
         make_default_config();
         config_destroy(parsed_config);
         free(path);
-        g_recess_suppressed = false;
+        recess_suppressed = false;
         return;
     }
     free(path);
@@ -84,12 +84,12 @@ static void parse_config() {
     atexit(destroy_config);
 
     // unsuppress failures
-    g_recess_suppressed = false;
+    recess_suppressed = false;
 }
 
 bool should_fail(const char *method){
     // suppressed -> no failures
-    if (g_recess_suppressed) {
+    if (recess_suppressed) {
         return false;
     }
 

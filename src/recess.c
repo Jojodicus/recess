@@ -18,7 +18,7 @@
 #include "config_utils.h"
 
 // flag if failures are currently suppressed, accessible from outside
-bool g_recess_suppressed = false;
+bool recess_suppressed = false;
 
 
 void *malloc(size_t size) {

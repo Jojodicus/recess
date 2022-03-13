@@ -9,6 +9,6 @@
 /*
  *  Stop recess from making libcalls fail.
  */
-extern bool g_recess_suppressed;
+extern bool recess_suppressed;
 
 #endif // RECESS_H
