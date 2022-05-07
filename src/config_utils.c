@@ -18,7 +18,8 @@ static config_t *parsed_config = NULL;
 
 static void make_default_config()
 {
-    config_clear(parsed_config);
+    config_destroy(parsed_config);
+    config_init(parsed_config);
     config_setting_t *root = config_root_setting(parsed_config);
     config_setting_add(root, "default", CONFIG_TYPE_INT);
 }
