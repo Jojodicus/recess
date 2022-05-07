@@ -20,9 +20,10 @@
 // flag if failures are currently suppressed, accessible from outside
 bool recess_suppressed = false;
 
-
-void *malloc(size_t size) {
-    if (should_fail("malloc")) {
+void *malloc(size_t size)
+{
+    if (should_fail("malloc"))
+    {
         errno = ENOMEM;
         return NULL;
     }
@@ -31,8 +32,10 @@ void *malloc(size_t size) {
     return __libc_malloc(size);
 }
 
-void *calloc(size_t nmemb, size_t size) {
-    if (should_fail("calloc")) {
+void *calloc(size_t nmemb, size_t size)
+{
+    if (should_fail("calloc"))
+    {
         errno = ENOMEM;
         return NULL;
     }
@@ -41,8 +44,10 @@ void *calloc(size_t nmemb, size_t size) {
     return __libc_calloc(nmemb, size);
 }
 
-void *realloc(void *ptr, size_t size) {
-    if (should_fail("realloc")) {
+void *realloc(void *ptr, size_t size)
+{
+    if (should_fail("realloc"))
+    {
         errno = ENOMEM;
         return NULL;
     }
@@ -50,6 +55,5 @@ void *realloc(void *ptr, size_t size) {
     extern void *__libc_realloc(void *, size_t);
     return __libc_realloc(ptr, size);
 }
-
 
 // @TODO: add lots of other syscalls
