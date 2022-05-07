@@ -24,7 +24,7 @@ recess.o: src/recess.c src/recess.h src/config_utils.h
 config_utils.o : src/config_utils.c src/recess.h src/config_utils.h
 
 librecess.so: $(OBJS)
-	$(CC) $(LDFLAGS) -DDEFAULT_FAIL_CHANCE=$(DEFAULT_FAIL_CHANCE) $^ -o $@
+	$(CC) $^ $(LDFLAGS) -DDEFAULT_FAIL_CHANCE=$(DEFAULT_FAIL_CHANCE) -o $@
 
 
 clean:
