@@ -80,10 +80,16 @@ static void parse_config()
     config_init(parsed_config);
     if (config_read_file(parsed_config, path) == CONFIG_FALSE)
     {
-        fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
-                config_error_line(parsed_config), config_error_text(parsed_config));
+        FILE *config_file = fopen(path, "r");
+        if (config_file != NULL)
+        {
+            fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
+                    config_error_line(parsed_config), config_error_text(parsed_config));
+            close(config_file);
+        }
+        else
+            fprintf(stderr, "Config file %s did not exist!", path);
         make_default_config();
-        config_destroy(parsed_config);
         free(path);
         recess_suppressed = false;
         return;
