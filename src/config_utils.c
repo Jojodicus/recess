@@ -16,12 +16,26 @@
 
 static config_t *parsed_config = NULL;
 
-static void make_default_config()
+static void make_default_config(char *path)
 {
     config_destroy(parsed_config);
     config_init(parsed_config);
     config_setting_t *root = config_root_setting(parsed_config);
-    config_setting_add(root, "default", CONFIG_TYPE_INT);
+    config_setting_t *default_chance = config_setting_add(root, "default", CONFIG_TYPE_INT);
+    config_setting_set_int(default_chance, DEFAULT_FAIL_CHANCE);
+    if (path != NULL)
+    {
+        FILE *config_file = fopen(path, "w");
+        if (config_file == NULL)
+        {
+            fprintf(stderr, "Failed to open config file while regenerating the very same!\n");
+            return;
+        }
+        fclose(config_file);
+        if (config_write_file(parsed_config, path) == CONFIG_FALSE)
+            fprintf(stderr, "Error while attempting to save default config:\n%s:%d - %s\n", config_error_file(parsed_config),
+                     config_error_line(parsed_config), config_error_text(parsed_config));
+    }
 }
 
 static void destroy_config()
@@ -71,7 +85,7 @@ static void parse_config()
     if (get_config_path(&path) != 0)
     {
         fprintf(stderr, "recess: failed to get config path\n");
-        make_default_config();
+        make_default_config(NULL);
         recess_suppressed = false;
         return;
     }
@@ -85,11 +99,11 @@ static void parse_config()
         {
             fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
                     config_error_line(parsed_config), config_error_text(parsed_config));
-            close(config_file);
+            fclose(config_file);
         }
         else
-            fprintf(stderr, "Config file %s did not exist!", path);
-        make_default_config();
+            fprintf(stderr, "Config file %s did not exist!\n", path);
+        make_default_config(path);
         free(path);
         recess_suppressed = false;
         return;
