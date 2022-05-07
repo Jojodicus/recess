@@ -94,10 +94,10 @@ static void parse_config()
             recess_suppressed = false;
             return;
         }
+        fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
+            config_error_line(parsed_config), config_error_text(parsed_config));
     }
     // Something went wrong. We hate that.
-    fprintf(stderr, "%s:%d - %s\n", config_error_file(parsed_config),
-            config_error_line(parsed_config), config_error_text(parsed_config));
     make_default_config();
     config_destroy(parsed_config);
     free(path);
