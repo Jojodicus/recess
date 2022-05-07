@@ -16,6 +16,9 @@ To use the tool, simply run `recess`, followed by the name of the binary you wan
 
     $ recess ./my_binary
 
+<!-- @TODO nice list of available shims -->
+To check if a certain method call is supported by recess, see if it's contained in [recess.c](src/recess.c).
+
 ## Customization
 The default fail chance for libcalls is 10%. You can change this by running
 
@@ -26,6 +29,25 @@ where editor is the name of your favorite text editor (or leave blank to use one
 By changing the fail chance, you can make the tool more or less likely to fail. The value should be between 0 and 100, otherwise the default value of 10 will still be used.
 
 If you really want, you can also edit the config by hand, the path to the config file is `~/.config/recess.cfg`.
+
+### Config format
+
+Recess is using [libconfig](https://hyperrealm.github.io/libconfig/), with every lib-/syscall having its own customizable fail chance in a [libconfig setting](https://hyperrealm.github.io/libconfig/libconfig_manual.html#Settings) format. The name of the setting is the name of the method that should be intercepted and the value is the chance that it will fail. There is also a setting named `default`, which is used as a fallback if the chance was not specified for a particular (supported) method.
+
+#### Example configs
+
+[the default config](recess.cfg)
+
+```
+default = 20;
+malloc = 5;
+```
+
+```
+calloc: 25
+# this is a comment
+default: 100 # always fail
+```
 
 ---
 
