@@ -37,7 +37,7 @@ install: librecess.so recess.sh recess.cfg
 	cp recess.sh $(INSTALL_PATH)/recess
 	cp librecess.so $(INSTALL_PATH)/librecess.so
 	chmod +x $(INSTALL_PATH)/recess
-	cp recess.cfg $(CFG_PATH)/recess.cfg
+	cp -i recess.cfg $(CFG_PATH)/recess.cfg
 
 uninstall:
 	rm -f $(INSTALL_PATH)/recess
