@@ -62,4 +62,4 @@ Try logging out and in again. If that doesn't work, `~/.local/bin` may be missin
 If it stops working after a relog, add the line above to your `~/.bash_profile` (or if that doesn't exist, the `~/.profile`). Then relog for the changes to take effect.
 
 ### `recess config` says `No editor found`
-The configurator for the environment variables $EDITOR and $VISUAL. If those aren't set it checks for the editors neovim, vim and nano (in that order). If none of those is found, it will terminate with an error. To fix this, set either of the environment variables, install one of the three editors or run `recess config <editor>` to specify the editor manually.
+The configurator for the environment variables $EDITOR and $VISUAL. If those aren't set it checks for the editors neovim, vim and nano (in that order). If none of those are found, it will terminate with an error. To fix this, set either of the environment variables, install one of the three editors or run `recess config <editor>` to specify the editor manually.
